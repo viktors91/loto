@@ -1,0 +1,62 @@
+{
+    "templates" : 
+        [
+            {
+                "id": 0,
+                "template":
+                [ 
+                    [2, null, null, 32, null, 57, null, 73, 88],
+                    [4, 17, 29, null, null, null, 61, null, null],
+                    [null, 18, 27, 31, 49, null, null, 75, null]
+                ]
+            },
+            {
+                "id": 1,
+                "template":
+                [ 
+                    [null, 15, 21, null, 46, 53, null, null, 80],
+                    [9, null, null, 32, null, 58, 61, null, 83],
+                    [2, 11, null, null, 41, 50, null, 74, null]
+                ]
+            },
+            {
+                "id": 2,
+                "template":
+                [ 
+                    [null, null, 22, 32, 41, null, 60, null, 81],
+                    [2, 13, 27, null, 46, null, null, 77, null],
+                    [7, 17, null, null, null, 52, null, 78, 80]
+                ]
+            },
+            {
+                "id": 3,
+                "template":
+                [ 
+                    [3, 13, null, 38, 45, null, null, null, 83],
+                    [null, 19, 20, null, 41, 53, null, 74, null],
+                    [null, null, 29, 33, null, null, 66, 79, 86]
+                ]
+            },
+            {
+                "id": 4,
+                "template":
+                [ 
+                    [6, null, 26, null, 43, 57, null, 76, null],
+                    [null, 12, null, 34, null, 54, 64, null, 88],
+                    [9, null, 22, null, 42, null, 69, null, 90]
+                ]
+            }
+            ,
+            {
+                "id": 5,
+                "template":
+                [ 
+                    [null, null, 28, null, 41, 55, null, 70, 82],
+                    [8, 14, null, null, 46, null, 62, 79, null],
+                    [6, null, 20, 39, null, null, 65, null, 90]
+                ]
+            }
+        ]
+        
+    
+}

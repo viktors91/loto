@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import CardField from './CardField'
-import dropedNumbersContext from './../../dropedNumbersContext'
+import dropedNumbersContext from '../../Contexts/dropedNumbersContext'
 import update from 'immutability-helper'
 
 interface CardProps {
@@ -32,10 +32,12 @@ const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
 
     useEffect(() => {
         countRowFields()
-        console.log('rowOne ', rowOne)
-        console.log('rowTwo ', rowTwo)
-        console.log('rowThree ', rowThree)
+        // console.log('rowOne ', rowOne)
+        // console.log('rowTwo ', rowTwo)
+        // console.log('rowThree ', rowThree)
     }, [clickedFields])
+
+    console.log('droppedNums card comp ', droppedNums)
 
     const onFieldClickHandler = (val: any, rowIndex: Number, cardId: Number) => {
 
@@ -48,10 +50,11 @@ const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
                 setClickedFields(update(clickedFields, { $push: [{ value: val, row: rowIndex, card: cardId }] }))
             }
         }
+        
     }
 
 
-    console.log('clickedFields ', clickedFields)
+    // console.log('clickedFields ', clickedFields)
     return (
         <div className="col-4 mb-3">
             {template.map((fields, rowIndex) => {
