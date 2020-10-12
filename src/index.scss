@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: -apple-system, BlinkMacSystemFont, 'Bookman' 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   font: 20px;
@@ -13,20 +13,14 @@ span {
   cursor: pointer;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-.cardField{
-  border: 1px #ccc solid;
-  /* width: 65px; */
+.card-field{
+  border: 1px black solid;
   height: 50px;
-  /* display: block; */
   text-align: center;
   line-height: 50px;
   cursor: pointer;
-  position:relative;
+  font-size: 1.25rem;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .completedFields {
@@ -49,6 +43,8 @@ code {
 }
 
 .modal-main {
+  padding: 15px;
+  text-align: center;
   position:fixed;
   background: white;
   width: 40%;
@@ -116,6 +112,7 @@ code {
 }
 
 .login-form {
+  width: 20%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,6 +133,7 @@ code {
   .form-input-material {
     margin: 12px 0;
     width: 100%;
+    display: inline-block;
   }
 
   .btn {
@@ -155,3 +153,81 @@ code {
     padding: 3px 10px;
   }
 }
+
+.card-border {
+  display: inline-block;
+  // width: 48%;
+  border: 3px black solid;
+  box-shadow: 0 0.4px 0.4px rgba(128, 128, 128, 0.109),
+    0 1px 1px rgba(128, 128, 128, 0.155),
+    0 2.1px 2.1px rgba(128, 128, 128, 0.195),
+    0 4.4px 4.4px rgba(128, 128, 128, 0.241),
+    0 12px 12px rgba(128, 128, 128, 0.35);
+}
+
+.dropped-numbers {
+  margin: 0px auto;
+  width: 20%;
+  height: 60px;
+
+  .number {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
+    font: normal small-caps normal 30px Bookman;
+    // animation: animation-rotate infinite cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    //     animation-duration: 2500ms;
+    //     animation-iteration-count: 1;
+  
+      &:first-child {
+        // animation: animation-rotate infinite cubic-bezier(0.250, 0.460, 0.450, 0.940);
+        // animation-duration: 2500ms;
+        // animation-iteration-count: 1;
+        // animation-fill-mode: backwards ;
+        // -webkit-animation-fill-mode: forwards;
+        font: 40px bold;
+    }
+  }
+}
+
+@keyframes animation-rotate {
+  0% { transform: rotate(0) }
+  100% { transform: rotate(359deg) }
+}
+
+.game-board {
+  // border-top: 1px solid rgba(0, 0, 0, 0.1);
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 80%;
+  height: 374px;
+  margin: 0px auto;
+}
+
+.buttons-panel {
+  width: 100%;
+  margin: 0px auto;
+}
+
+
+
+
+.svg-icon {
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  margin-left: -25px;
+  top: 50%;
+  margin-top: -25px;
+}
+
+// .svg-icon path,
+// .svg-icon polygon,
+// .svg-icon rect {
+//   fill: #4691f6;
+// }
+
+// .svg-icon circle {
+//   stroke: #4691f6;
+//   stroke-width: 1;
+// }

@@ -1,17 +1,35 @@
 import React, { useState, useContext, useEffect } from 'react'
 import CardField from './CardField'
-import dropedNumbersContext from '../../Contexts/dropedNumbersContext'
+import DropedNumbersContext from '../../Contexts/dropedNumbersContext'
+import SettingsContext from '../../Contexts/settingsContext'
 import update from 'immutability-helper'
+
+interface ModalData {
+    show: boolean,
+    win: boolean
+}
 
 interface CardProps {
     id: Number,
     template: any[],
-    toggleModal: () => void
+    toggleModal: () => void,
+    setStopInterval: (v: boolean) => void,
+    setModalData: (obj: ModalData) => any
 }
 
-const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
-    const droppedNums = useContext(dropedNumbersContext)
+const Card: React.FC<CardProps> = ({
+    id,
+    template,
+    toggleModal,
+    setStopInterval,
+    setModalData
+}) => {
+
+    const { droppedNumbers } = useContext(DropedNumbersContext)
+    const { allowedMissedClicks } = useContext(SettingsContext)
     const [clickedFields, setClickedFields] = useState<any>([])
+    let [missedClicks, setMissedClicks] = useState(0)
+
     let rowOne = 0
     let rowTwo = 0
     let rowThree = 0
@@ -25,23 +43,20 @@ const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
             }
         });
 
-        if(rowOne === 5 || rowTwo === 5 || rowThree === 5) {
+        if (rowOne === 5 || rowTwo === 5 || rowThree === 5) {
+            setStopInterval(true)
             toggleModal()
         }
     }
 
     useEffect(() => {
         countRowFields()
-        // console.log('rowOne ', rowOne)
-        // console.log('rowTwo ', rowTwo)
-        // console.log('rowThree ', rowThree)
     }, [clickedFields])
 
-    console.log('droppedNums card comp ', droppedNums)
 
     const onFieldClickHandler = (val: any, rowIndex: Number, cardId: Number) => {
 
-        if (droppedNums.includes(val)) {
+        if (droppedNumbers.includes(val)) {
             const isEmptyClickedFieldsArray = clickedFields.length === 0
 
             const clickedValues = !isEmptyClickedFieldsArray && clickedFields.map((field: any) => field.value)
@@ -49,14 +64,21 @@ const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
             if (isEmptyClickedFieldsArray || !clickedValues.includes(val)) {
                 setClickedFields(update(clickedFields, { $push: [{ value: val, row: rowIndex, card: cardId }] }))
             }
+        } else {
+            missedClicks++
+            setMissedClicks(missedClicks)
+            if (missedClicks > allowedMissedClicks) {
+                setStopInterval(true)
+                setModalData({ show: true, win: false })
+            }
         }
-        
+
     }
 
 
     // console.log('clickedFields ', clickedFields)
     return (
-        <div className="col-4 mb-3">
+        <div className="mt-3 mb-3 p-0 col-5 card-border">
             {template.map((fields, rowIndex) => {
                 return (
                     <div className="d-flex" key={rowIndex}>
@@ -75,43 +97,6 @@ const Card: React.FC<CardProps> = ({ id, template, toggleModal }) => {
         </div>
     )
 
-    // return (
-    //     <div className="col-4 ">
-    //         <div className=" d-flex">
-    //             <CardField value={2} clickedField={clickedField} onClickHandler={() => onClickHandler(2)}/>
-    //             <CardField />
-    //             <CardField />
-    //             <CardField value={32} clickedField={clickedField} onClickHandler={() => onClickHandler(32)}/>
-    //             <CardField />
-    //             <CardField value={57} clickedField={clickedField} onClickHandler={() => onClickHandler(57)}/>
-    //             <CardField />
-    //             <CardField value={73} clickedField={clickedField} onClickHandler={() => onClickHandler(73)}/>
-    //             <CardField value={88} clickedField={clickedField} onClickHandler={() => onClickHandler(88)}/>
-    //         </div>
-    //         <div className=" d-flex">
-    //             <CardField value={4} clickedField={clickedField} onClickHandler={() => onClickHandler(4)}/>
-    //             <CardField value={17} clickedField={clickedField} onClickHandler={() => onClickHandler(17)}/>
-    //             <CardField value={29} clickedField={clickedField} onClickHandler={() => onClickHandler(29)}/>
-    //             <CardField />
-    //             <CardField />
-    //             <CardField />
-    //             <CardField value={61} clickedField={clickedField} onClickHandler={() => onClickHandler(61)}/>
-    //             <CardField />
-    //             <CardField />
-    //         </div>
-    //         <div className=" d-flex">
-    //             <CardField />
-    //             <CardField value={18} clickedField={clickedField} onClickHandler={() => onClickHandler(18)}/>
-    //             <CardField value={27} clickedField={clickedField} onClickHandler={() => onClickHandler(27)}/>
-    //             <CardField value={31} clickedField={clickedField} onClickHandler={() => onClickHandler(31)}/>
-    //             <CardField value={49} clickedField={clickedField} onClickHandler={() => onClickHandler(49)}/>
-    //             <CardField />
-    //             <CardField />
-    //             <CardField value={75} clickedField={clickedField} onClickHandler={() => onClickHandler(75)}/>
-    //             <CardField />
-    //         </div>
-    //     </div>
-    // )
 }
 
 export default Card

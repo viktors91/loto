@@ -1,41 +1,37 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
+import SettingsContext from '../Contexts/settingsContext'
 
 interface DroppedNumbersProps {
     dropedNumbersState: [number[], React.Dispatch<React.SetStateAction<number[]>>],
     remainingNumbersState: [number[], React.Dispatch<React.SetStateAction<number[]>>],
-    generateNumber: () => void
-    // dropedNumbers: Array<number>,
-    // setDroppedNumbers: () => void,
-    // remainingNumbers: Array<number>
+    generateNumber: () => void,
+    stopInterval: boolean
 }
 
 const DroppedNumbers: React.FC<DroppedNumbersProps> = ({
     dropedNumbersState: [dropedNumbers, setDroppedNumbers],
     remainingNumbersState: [remainingNumbers, setRemainingNumbers],
-    generateNumber
+    generateNumber,
+    stopInterval
 }) => {
-
-    // const generateNumber = useCallback(() => {
-    //     const remainingNumberIndex = Math.floor(Math.random() * remainingNumbers.length)
-    //     setDroppedNumbers(update(dropedNumbers, { $push: [remainingNumbers[remainingNumberIndex]] }))
-    //     setRemainingNumbers(update(remainingNumbers, { $splice: [[remainingNumberIndex, 1]] }));
-    // }, [dropedNumbers, setDroppedNumbers, remainingNumbers, setRemainingNumbers])
+    const {timer } = useContext(SettingsContext)
 
     useEffect(() => {
-        if (remainingNumbers.length !== 90) {
+        if (!stopInterval && remainingNumbers.length !== 90) {
             const interval = setInterval(() => {
                 generateNumber()
-            }, 3000);
+            }, timer);
             return () => clearInterval(interval);
         }
-    }, [generateNumber, remainingNumbers]);
+    }, [generateNumber, remainingNumbers, stopInterval, timer]);
 
     const lastFiveNumbersArr = dropedNumbers && dropedNumbers.length ? dropedNumbers.slice(Math.max(dropedNumbers.length - 5, 0)).reverse() : []
 
     return (
-        <div className='m-3'>
+        <div className='dropped-numbers mb-3'>
             {lastFiveNumbersArr.length > 0 && lastFiveNumbersArr.map((number, index) => (
-                <span className='mr-2' key={index}>{number}</span>
+                // <span className={`number ${index === 0 ? 'w3-animate-top' : 'w3-animate-left'}`} key={index}>{number}</span>
+                <span className='number' key={index}>{number}</span>
             ))}
         </div>
     )

@@ -1,93 +1,88 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { DropedNumbersContextProvider } from '../Contexts/dropedNumbersContext'
+import SettingsContext from '../Contexts/settingsContext'
 import Modal from '../Components/Modal/Modal'
 import update from 'immutability-helper'
 import DroppedNumbers from '../Components/DroppedNumbers'
 import Card from '../Components/Card/Card'
 
-interface Card {
-    id: number,
-    template: (number | null)[][]
-}
-
 interface BoardProps {
-    userName: string,
-    cards: Array<Card>
+    cards: Array<{
+        id: number,
+        template: (number | null)[][]
+    }>
 }
 
-const Board: React.FC<BoardProps> = ({ userName, cards }) => {
-    const [showModal, setShowModal] = useState(false)
-    const [dropedNumbers, setDroppedNumbers] = useState<number[]>([])
+const Board: React.FC<BoardProps> = ({ cards }) => {
 
-    useEffect(() => {
-        console.log('genereteGameCards useEffect')
-        
-    }, [])
+    const [modalData, setModalData] = useState({ show: false, win: true })
+    const [dropedNumbers, setDroppedNumbers] = useState<number[]>([])
+    const [stopInterval, setStopInterval] = useState(false)
+    const { userName, setShowBoard } = useContext(SettingsContext)
 
     const generateStartingNumbers = () => [...Array(90)].map((_, index) => index + 1);
     const [remainingNumbers, setRemainingNumbers] = useState<number[]>(generateStartingNumbers)
 
-    // const generateNumber = useCallback(() => {
+
     const generateNumber = () => {
         const remainingNumberIndex = Math.floor(Math.random() * remainingNumbers.length)
         setDroppedNumbers(update(dropedNumbers, { $push: [remainingNumbers[remainingNumberIndex]] }))
         setRemainingNumbers(update(remainingNumbers, { $splice: [[remainingNumberIndex, 1]] }));
     }
-    // }, [dropedNumbers, remainingNumbers])
-
-    // useEffect(() => {
-    //     if (remainingNumbers.length !== 90) {
-    //         const interval = setInterval(() => {
-    //             generateNumber()
-    //         }, 3000);
-    //         return () => clearInterval(interval);
-    //     }
-    // }, [generateNumber, remainingNumbers]);
 
     const startGame = () => {
-        // setRemainingNumbers(update(remainingNumbers, { $push: generateStartingNumbers() }))
         generateNumber()
     }
 
-    const stopGame = () => {
-        // // setRemainingNumbers(update(remainingNumbers, { $push: generateStartingNumbers() }))
-        // setDroppedNumbers(update(dropedNumbers, { $set: [[]] }))
-        // setRemainingNumbers(update(remainingNumbers, { $set: [generateStartingNumbers] }));
-    }
-
-    console.log('dropedNumbers ', dropedNumbers)
-    console.log('remainingNumbers.length ', remainingNumbers.length)
-
     const toggleModal = () => {
-        setShowModal(opened => !opened)
+        setModalData({ ...modalData, show: true })
     }
 
     return (
         <DropedNumbersContextProvider
-            value={[...dropedNumbers]}
+            value={{
+                droppedNumbers: [...dropedNumbers]
+            }}
         >
-            <DroppedNumbers
-                dropedNumbersState={[dropedNumbers, setDroppedNumbers]}
-                // dropedNumbers={dropedNumbers}
-                // setDroppedNumbers={setDroppedNumbers}
-                remainingNumbersState={[remainingNumbers, setRemainingNumbers]}
-                generateNumber={generateNumber}
-            // remainingNumbers={remainingNumbers}
-            // setRemainingNumbers={setRemainingNumbers}
-            />
-            {cards.map((card, i) => (
-                <Card key={i} id={card.id} template={card.template} toggleModal={toggleModal} />
-            ))}
-
-            <button onClick={startGame}>Start</button>
-            <button onClick={stopGame}>Stop / Restart</button>
-            {showModal && (
+            <div>
+                <DroppedNumbers
+                    dropedNumbersState={[dropedNumbers, setDroppedNumbers]}
+                    remainingNumbersState={[remainingNumbers, setRemainingNumbers]}
+                    generateNumber={generateNumber}
+                    stopInterval={stopInterval}
+                />
+                <hr />
+                <div className="game-board mt-3">
+                    <div className="row justify-content-between">
+                        {cards.map((card, i) => (
+                            <Card
+                                key={i}
+                                id={card.id}
+                                template={card.template}
+                                toggleModal={toggleModal}
+                                setStopInterval={setStopInterval}
+                                setModalData={setModalData}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <hr />
+                <div className="buttons-panel mt-3 justify-content-center d-flex">
+                    {dropedNumbers.length === 0 ?
+                        <button className="btn btn-primary btn-ghost" onClick={startGame}>Start</button>
+                        :
+                        <button className="btn btn-primary btn-ghost" onClick={() => setShowBoard(false)}>Stop / Restart</button>
+                    }
+                </div>
+            </div>
+            {modalData.show && (
                 <Modal
-                    show={showModal}
+                    modalData={modalData}
                     toggleModal={toggleModal}
+                    usedNumbers={dropedNumbers.length}
+                    setShowBoard={setShowBoard}
+                    userName={userName}
                 >
-                    <p>Modal</p>
-                    <p>Data</p>
                 </Modal>
             )}
         </DropedNumbersContextProvider>
